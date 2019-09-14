@@ -18,6 +18,12 @@ class ValidateUtil {
             }
         }
 
+        fun validateTxId(txId: String) = apply {
+            if(!Regex("0x([A-Fa-f0-9]{64})").containsMatchIn(txId) && (txId.toLongOrNull() == null)) {
+                throw ValidateUtilException("Invalid TxHash")
+            }
+        }
+
         fun validateId(id: String) = apply {
             val intId = if(id.isNotEmpty()) BigNumber(id) else throw ValidateUtilException("Invalid Id")
             if(intId.isLessThan(BigNumberValue.ZERO)) {
