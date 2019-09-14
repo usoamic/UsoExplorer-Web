@@ -21,30 +21,8 @@ import js.externals.jquery.jQuery
 import kotlin.browser.localStorage
 
 abstract class ExplorerView(application: Application) : View(application) {
-    private val searchBtn = jQuery("#search_button")
-
     protected val web3 = Web3(NODE)
     private val contract = web3.newContract<Usoamic>(CONTRACT_ABI, "0x42210806DCA8E0C7A5Cff83192852eB0db4ce764")
     protected val methods = contract.methods
     protected val callOption = CallOption("0x5d8766ac0075bdf81b48f0bfcf92449e9def0f37")
-
-    init {
-        setListeners()
-    }
-
-    open fun onSearchClick() { }
-
-    override fun startLoading() {
-        searchBtn.startLoading()
-    }
-
-    override fun stopLoading() {
-        searchBtn.stopLoading()
-    }
-
-    private fun setListeners() {
-        searchBtn.onClick {
-            onSearchClick()
-        }
-    }
 }
