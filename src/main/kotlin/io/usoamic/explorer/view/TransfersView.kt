@@ -1,16 +1,11 @@
 package io.usoamic.explorer.view
 
-import io.usoamic.web3kt.util.extension.removeHexPrefixIfExist
 import io.usoamic.explorer.base.Application
-import io.usoamic.explorer.base.View
+import io.usoamic.explorer.base.ExplorerView
+import io.usoamic.web3kt.core.contract.util.Coin
 import js.externals.jquery.jQuery
-import js.externals.toastr.extensions.error
-import js.externals.toastr.toastr
-import js.externals.jquery.JQuery
-import js.externals.jquery.extension.*
-import org.w3c.dom.HTMLElement
 
-class TransfersView(application: Application) : View(application) {
+class TransfersView(application: Application) : ExplorerView(application) {
     override val view = jQuery("#add_wallet_view")
 
     private val summary = jQuery("#summary")
@@ -26,6 +21,44 @@ class TransfersView(application: Application) : View(application) {
         super.onStart()
         summary.show()
     }
+
+    override fun onRefresh() {
+        super.onRefresh()
+        refreshEthHeight()
+        refreshUsoSupply()
+        refreshUsoFrozen()
+    }
+
+    private fun refreshEthHeight() {
+        web3.eth.getBlockNumber()
+            .then {
+                ethHeight.text(it.toString())
+            }
+            .catch {
+                onException(it)
+            }
+    }
+
+    private fun refreshUsoSupply() {
+        methods.getSupply().call(callOption)
+            .then {
+                usoSupply.text(Coin.fromSat(it).toMillion())
+            }
+            .catch {
+                onException(it)
+            }
+    }
+
+    private fun refreshUsoFrozen() {
+        methods.getFrozen().call(callOption)
+            .then {
+                usoFrozen.text(if(it) "YES" else "NO")
+            }
+            .catch {
+                onException(it)
+            }
+    }
+
 
     private fun setListeners() {
 //        saveBtn.onClick {
