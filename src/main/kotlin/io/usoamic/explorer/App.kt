@@ -6,7 +6,6 @@ import io.usoamic.explorer.base.Application
 import io.usoamic.explorer.base.View
 import io.usoamic.explorer.enumcls.Page
 import io.usoamic.explorer.view.*
-import js.externals.jquery.extension.setActive
 import js.externals.jquery.jQuery
 import js.externals.toastr.toastr
 import kotlin.browser.window
@@ -35,10 +34,8 @@ class App : Application {
     override fun open(view: View) {
         if (::currentView.isInitialized) {
             currentView.onStop()
-            currentView.navBarItem?.setActive(false)
         }
 
-        view.navBarItem?.setActive(true)
         currentView = view
         currentView.onStart()
         currentView.onRefresh()
