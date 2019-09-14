@@ -1,15 +1,22 @@
 package io.usoamic.explorer.base
 
 import js.externals.jquery.JQuery
+import js.externals.jquery.extension.clearContent
 import js.externals.jquery.extension.clearText
 import js.externals.jquery.extension.clearVal
 import org.w3c.dom.HTMLElement
 
 abstract class View(protected val application: Application) {
     abstract val view: JQuery<HTMLElement>
+    var isFind: Boolean = false
+    abstract val input: JQuery<HTMLElement>
 
     open fun startLoading() {
         application.startLoading()
+    }
+
+    open fun onFind(findData: String) {
+        input.content(findData)
     }
 
     open fun stopLoading() {
@@ -17,6 +24,9 @@ abstract class View(protected val application: Application) {
     }
 
     open fun onStart() {
+        if(!isFind) {
+            input.clearContent()
+        }
         view.show()
     }
 
@@ -39,10 +49,12 @@ abstract class View(protected val application: Application) {
     }
 
     open fun onError(s: String?) {
+        stopLoading()
         application.onError(s)
     }
 
     open fun onException(t: Throwable) {
+        stopLoading()
         application.onException(t)
     }
 }
