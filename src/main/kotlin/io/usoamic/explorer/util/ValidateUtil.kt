@@ -19,6 +19,7 @@ class ValidateUtil {
         }
 
         fun validateTxId(txId: String) = apply {
+            validateThatNotEmpty(txId, "TxID Required")
             if(!Regex("0x([A-Fa-f0-9]{64})").containsMatchIn(txId) && (txId.toLongOrNull() == null)) {
                 throw ValidateUtilException("Invalid TxHash")
             }
