@@ -8,7 +8,7 @@ interface Application {
     fun startLoading()
     fun stopLoading()
     fun open(view: View)
-    fun openPage(page: Page)
+    fun openPage(page: Page, data: String = "")
     fun onException(t: Throwable)
     fun onError(s: String?)
     fun loadDependency()
