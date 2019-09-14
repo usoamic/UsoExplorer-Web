@@ -10,6 +10,7 @@ abstract class View(protected val application: Application) {
     abstract val view: JQuery<HTMLElement>
     var isFind: Boolean = false
     abstract val input: JQuery<HTMLElement>
+    abstract val searchBtn: JQuery<HTMLElement>
 
     open fun startLoading() {
         application.startLoading()
