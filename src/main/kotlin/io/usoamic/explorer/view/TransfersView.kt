@@ -34,9 +34,7 @@ class TransfersView(application: Application) : ExplorerView(application) {
             .then {
                 ethHeight.text(it.toString())
             }
-            .catch {
-                onException(it)
-            }
+            .catch(this::onException)
     }
 
     private fun refreshUsoSupply() {
@@ -44,9 +42,7 @@ class TransfersView(application: Application) : ExplorerView(application) {
             .then {
                 usoSupply.text(Coin.fromSat(it).toMillion())
             }
-            .catch {
-                onException(it)
-            }
+            .catch(this::onException)
     }
 
     private fun refreshUsoFrozen() {
@@ -54,9 +50,7 @@ class TransfersView(application: Application) : ExplorerView(application) {
             .then {
                 usoFrozen.text(if(it) "YES" else "NO")
             }
-            .catch {
-                onException(it)
-            }
+            .catch(this::onException)
     }
 
 
