@@ -2,33 +2,143 @@ package io.usoamic.explorer.view
 
 import io.usoamic.explorer.base.Application
 import io.usoamic.explorer.base.ExplorerView
+import io.usoamic.explorer.enumcls.Page
 import io.usoamic.explorer.other.Timestamp
+import io.usoamic.explorer.util.Async
 import io.usoamic.explorer.util.CommonUtils
+import io.usoamic.explorer.util.ValidateUtil
+import io.usoamic.web3kt.abi.AbiDecoder
 import io.usoamic.web3kt.core.contract.util.Coin
 import js.externals.datatables.net.JQueryDataTable
 import js.externals.datatables.net.extension.dataTable
 import js.externals.datatables.net.model.DataTableOption
+import js.externals.jquery.extension.onClick
+import js.externals.jquery.extension.stopLoading
 import js.externals.jquery.jQuery
 import kotlin.math.min
+import io.usoamic.web3kt.bignumber.BigNumber
+import js.externals.jquery.extension.startLoading
+import js.externals.toastr.toastr
 
 class TransfersView(application: Application) : ExplorerView(application) {
-    override val view = jQuery("#add_wallet_view")
+    override val view = jQuery("#transfers_view")
+    override val searchBtn = jQuery("#transfer_search_button")
+    override val input = jQuery("#tx_id_input")
 
-    private val summary = jQuery("#summary")
     private val ethHeight = jQuery("#eth_height")
     private val usoSupply = jQuery("#uso_supply")
     private val usoFrozen = jQuery("#uso_frozen")
 
     private val lastTransfersTable = jQuery("#last_transfers").unsafeCast<JQueryDataTable>()
     private var numberOfLastTransfers: Long = 0
+    private val lastTransfersBlock = jQuery("#block_last_transfers")
+    private val transferDataBlock = jQuery("#block_transfer_data")
+
+    private val fromElement = jQuery("#from_element")
+    private val toElement = jQuery("#to_element")
+    private val valueElement = jQuery("#value_element")
+    private val timestampElement = jQuery("#timestamp_element")
 
     init {
+        setListeners()
         prepareLastTransfers()
+    }
+
+    override fun startLoading() {
+        searchBtn.startLoading()
+    }
+
+    override fun stopLoading() {
+        searchBtn.stopLoading()
+    }
+
+    private fun setListeners() {
+        searchBtn.onClick {
+            val txId = input.content()
+            application.openPage(Page.TRANSFER, txId)
+        }
+    }
+
+    override fun onFind(findData: String) {
+        super.onFind(findData)
+        startLoading()
+
+        try {
+            ValidateUtil.validateTxId(findData)
+
+            Async.launch {
+                if(findData.toLongOrNull() == null) {
+                    findTransferDataByTxHash(findData)
+                }
+                else {
+                    findTransferDataByTxId(findData)
+                }
+            }
+        } catch (e: Throwable) {
+            onException(e)
+        }
+    }
+
+    private fun setTransferInfoVisibility(isShow: Boolean) {
+        if(isShow) {
+            lastTransfersBlock.hide()
+            transferDataBlock.show()
+        }
+        else {
+            lastTransfersBlock.show()
+            transferDataBlock.hide()
+        }
+    }
+
+    private fun findTransferDataByTxHash(txHash: String) {
+        web3.eth.getTransactionReceipt(txHash)
+            .then { tx ->
+                web3.eth.getBlock(tx.blockHash)
+                    .then { block ->
+                        try {
+                            val events = AbiDecoder.decodeLogs(tx.logs)[0].events
+                            setTransferData(
+                                true,
+                                events[0].value as String,
+                                events[1].value as String,
+                                events[2].value as String,
+                                block.timestamp
+                            )
+                        } catch (t: Throwable) {
+                            onException(t)
+                        }
+                    }
+                    .catch(this::onException)
+            }
+            .catch(this::onException)
+    }
+
+    private fun findTransferDataByTxId(txId: String) {
+        methods.getTransaction(txId).call(callOption)
+            .then {
+                setTransferData(it.isExist, it.from, it.to, it.value.toString(), it.timestamp)
+            }
+            .catch(this::onException)
+    }
+
+    private fun setTransferData(isExist: Boolean, from: String, to: String, value: String, timestamp: BigNumber) {
+        setTransferInfoVisibility(isExist)
+        if(isExist) {
+            fromElement.text(from)
+            toElement.text(to)
+            valueElement.text(Coin.fromSat(value).toPlainString())
+            timestampElement.text(Timestamp.fromBigNumber(timestamp).toLocaleString())
+        }
+        else {
+            toastr.error("Transfer not found")
+        }
+        stopLoading()
     }
 
     override fun onStart() {
         super.onStart()
-        summary.show()
+        lastTransfersBlock.show()
+        transferDataBlock.hide()
     }
 
     override fun onRefresh() {
@@ -71,25 +181,20 @@ class TransfersView(application: Application) : ExplorerView(application) {
         getTransactions {
             numberOfLastTransfers = it.size.toLong()
             val callback =
-            lastTransfersTable.dataTable(DataTableOption(data = it))
+                lastTransfersTable.dataTable(DataTableOption(data = it))
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        summary.hide()
     }
 
     private fun getTransactions(callback: (MutableList<List<Any>>) -> Unit) {
         methods.getNumberOfTransactions()
             .call(callOption)
             .then {
-                val lastId = min(30, it.toLong())
+                val lastId = min(10, it.toLong())
                 if (numberOfLastTransfers == lastId) {
                     return@then
                 }
                 if (lastId > 0) {
-                    iterateTransactions(mutableListOf(),  lastId,0, lastId, callback)
+                    iterateTransactions(mutableListOf(), lastId, 0, lastId, callback)
                 } else {
                     callback(mutableListOf())
                 }
@@ -128,10 +233,15 @@ class TransfersView(application: Application) : ExplorerView(application) {
     companion object {
         private var instance: TransfersView? = null
 
-        fun open(application: Application) {
+        fun open(application: Application, findData: String) {
             if (instance == null) {
                 instance = TransfersView(application)
             }
+            val isFind = findData.isNotEmpty()
+            if(isFind) {
+                instance?.onFind(findData)
+            }
+            instance?.isFind = isFind
             return application.open(instance!!)
         }
     }
