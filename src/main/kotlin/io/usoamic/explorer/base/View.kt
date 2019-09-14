@@ -7,7 +7,6 @@ import org.w3c.dom.HTMLElement
 
 abstract class View(protected val application: Application) {
     abstract val view: JQuery<HTMLElement>
-    abstract val navBarItem: JQuery<HTMLElement>?
 
     open fun startLoading() {
         application.startLoading()

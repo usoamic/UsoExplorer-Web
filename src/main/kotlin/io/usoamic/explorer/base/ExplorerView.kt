@@ -15,24 +15,36 @@ import io.usoamic.web3kt.util.EthUnit
 import io.usoamic.explorer.enumcls.Page
 import io.usoamic.explorer.other.Timestamp
 import js.externals.jquery.extension.onClick
+import js.externals.jquery.extension.startLoading
+import js.externals.jquery.extension.stopLoading
 import js.externals.jquery.jQuery
 import kotlin.browser.localStorage
 
 abstract class ExplorerView(application: Application) : View(application) {
+    private val searchBtn = jQuery("#search_button")
+
     private val web3 = Web3(NODE)
     private val contract = web3.newContract<Usoamic>(CONTRACT_ABI, "0x42210806DCA8E0C7A5Cff83192852eB0db4ce764")
     private val methods = contract.methods
-
-    private val logoutBtn = jQuery("#logout")
     private val callOption = CallOption("0x5d8766ac0075bdf81b48f0bfcf92449e9def0f37 ")
 
     init {
         setListeners()
     }
 
+    open fun onSearchClick() { }
+
+    override fun startLoading() {
+        searchBtn.startLoading()
+    }
+
+    override fun stopLoading() {
+        searchBtn.stopLoading()
+    }
+
     private fun setListeners() {
-        logoutBtn.onClick {
-//            application.openPage(Page.FIRST)
+        searchBtn.onClick {
+            onSearchClick()
         }
     }
 
