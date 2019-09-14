@@ -85,10 +85,10 @@ class App : Application {
 
         when (page) {
             Page.TRANSFERS -> {
-                AccountsView.open(this)
+                TransfersView.open(this)
             }
             Page.ACCOUNTS -> {
-                TransfersView.open(this)
+                AccountsView.open(this)
             }
         }
     }
