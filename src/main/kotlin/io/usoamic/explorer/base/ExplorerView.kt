@@ -1,24 +1,11 @@
 package io.usoamic.explorer.base
 
 import io.usoamic.usoamickotlinjs.core.Usoamic
-import io.usoamic.usoamickotlinjs.core.extension.getTransactionsByAddress
-import io.usoamic.usoamickotlinjs.model.Transaction
-import io.usoamic.usoamickotlinjs.other.Config
 import io.usoamic.usoamickotlinjs.other.Config.Companion.CONTRACT_ABI
 import io.usoamic.usoamickotlinjs.other.Config.Companion.NODE
 import io.usoamic.web3kt.core.Web3
 import io.usoamic.web3kt.core.contract.model.CallOption
-import io.usoamic.web3kt.core.contract.util.Coin
 import io.usoamic.web3kt.core.extension.newContract
-import io.usoamic.web3kt.tx.block.DefaultBlockParameterName
-import io.usoamic.web3kt.util.EthUnit
-import io.usoamic.explorer.enumcls.Page
-import io.usoamic.explorer.other.Timestamp
-import js.externals.jquery.extension.onClick
-import js.externals.jquery.extension.startLoading
-import js.externals.jquery.extension.stopLoading
-import js.externals.jquery.jQuery
-import kotlin.browser.localStorage
 
 abstract class ExplorerView(application: Application) : View(application) {
     protected val web3 = Web3(NODE)
