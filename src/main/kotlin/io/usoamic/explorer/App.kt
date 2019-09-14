@@ -6,6 +6,8 @@ import io.usoamic.explorer.base.Application
 import io.usoamic.explorer.base.View
 import io.usoamic.explorer.enumcls.Page
 import io.usoamic.explorer.view.*
+import io.usoamic.usoamickotlinjs.other.Config
+import io.usoamic.web3kt.abi.AbiDecoder
 import js.externals.jquery.jQuery
 import js.externals.toastr.toastr
 import kotlin.browser.window
@@ -15,6 +17,7 @@ class App : Application {
     private val loader = jQuery(".loader")
 
     init {
+        AbiDecoder.addABI(JSON.parse(Config.CONTRACT_ABI))
         startLoading()
         loadDependency()
         setListeners()
@@ -43,8 +46,8 @@ class App : Application {
         currentView.onRefresh()
     }
 
-    override fun openPage(page: Page) {
-        window.location.hash = "#${page.name.toLowerCase()}"
+    override fun openPage(page: Page, data: String) {
+        window.location.hash = "#${page.name.toLowerCase()}" + if(data.isNotEmpty()) "_$data" else ""
     }
 
     override fun onError(s: String?) {
@@ -77,18 +80,24 @@ class App : Application {
     }
 
     private fun onHashChange() {
+        var findData = ""
         val page = try {
-            Page.valueOf(window.location.hash.replace("#", "").toUpperCase())
+            val hash = window.location.hash
+            val hashArg = hash.split("_")
+            if(hashArg.size > 1) {
+                findData = hashArg[1]
+            }
+            Page.valueOf(hash.replace("#", "").toUpperCase())
         } catch (e: IllegalStateException) {
             Page.TRANSFERS
         }
 
         when (page) {
-            Page.TRANSFERS -> {
-                TransfersView.open(this)
+            Page.TRANSFERS, Page.TRANSFER -> {
+                TransfersView.open(this, findData)
             }
-            Page.ACCOUNTS -> {
-                AccountsView.open(this)
+            Page.ACCOUNTS, Page.ACCOUNT -> {
+                AccountsView.open(this, findData)
             }
         }
     }
