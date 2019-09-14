@@ -141,17 +141,5 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script type="text/javascript">
-    jQuery(function() {
-        const tableList = ['transfers'];
-        for(let i = 0; i < tableList.length; i++) {
-            const object = '#' + tableList[i];
-            if($(object).length) {
-                $(object).DataTable({"ordering": false});
-            }
-        }
-        $(".loader").delay(1500).fadeOut();
-    });
-
-</script>
+<script type="text/javascript" language="JavaScript" src="js/main.bundle.js"></script>
 </html>

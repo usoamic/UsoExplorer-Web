@@ -1,0 +1,1 @@
+config.output.path = "C:\\Users\\Admin\\IdeaProjects\\explorer\\src\\main\\html\\js"
