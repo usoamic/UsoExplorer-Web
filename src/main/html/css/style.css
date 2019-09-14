@@ -122,6 +122,10 @@ table tbody td a:hover {
     color: black;
 }
 
+.hidden {
+    display: none;
+}
+
 /*
  * https://www.w3schools.com/howto/howto_css_loader.asp
  */
