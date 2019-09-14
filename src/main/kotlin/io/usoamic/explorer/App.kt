@@ -36,6 +36,8 @@ class App : Application {
             currentView.onStop()
         }
 
+        setTitle(view)
+
         currentView = view
         currentView.onStart()
         currentView.onRefresh()
@@ -53,6 +55,15 @@ class App : Application {
 
     override fun onException(t: Throwable) {
         onError(t.message)
+    }
+
+    private fun setTitle(view: View) {
+        val title = when(view) {
+            is TransfersView -> "Transfers"
+            is AccountsView -> "Accounts"
+            else -> "Unknown"
+        }
+        window.document.title = "UsoExplorer" + (if(title.isNotEmpty()) " $title" else "")
     }
 
     private fun setListeners() {
