@@ -46,11 +46,21 @@ class TransfersView(application: Application) : View(application) {
         prepareLastTransfers()
     }
 
-    private fun setListeners() {
-        searchBtn.onClick {
-            val txId = input.content()
-            application.openPage(Page.TRANSFER, txId)
+    override fun onStart() {
+        super.onStart()
+
+        if (!isFind) {
+            setVisibility(false)
+            clearTexts(listOf(fromElement, toElement, valueElement, timestampElement), "Loading...")
         }
+    }
+
+    override fun onRefresh() {
+        super.onRefresh()
+        refreshEthHeight()
+        refreshUsoSupply()
+        refreshUsoFrozen()
+        refreshLastTransfers()
     }
 
     override fun onFind(findData: String) {
@@ -73,7 +83,14 @@ class TransfersView(application: Application) : View(application) {
         }
     }
 
-    private fun setTransferInfoVisibility(isShow: Boolean) {
+    private fun setListeners() {
+        searchBtn.onClick {
+            val txId = input.content()
+            application.openPage(Page.TRANSFER, txId)
+        }
+    }
+
+    private fun setVisibility(isShow: Boolean) {
         if(isShow) {
             lastTransfersBlock.hide()
             transferDataBlock.show()
@@ -116,7 +133,7 @@ class TransfersView(application: Application) : View(application) {
     }
 
     private fun setTransferData(isExist: Boolean, from: String, to: String, value: String, timestamp: BigNumber) {
-        setTransferInfoVisibility(isExist)
+        setVisibility(isExist)
         if(isExist) {
             fromElement.text(from)
             toElement.text(to)
@@ -127,20 +144,6 @@ class TransfersView(application: Application) : View(application) {
             toastr.error("Transfer not found")
         }
         stopLoading()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        lastTransfersBlock.show()
-        transferDataBlock.hide()
-    }
-
-    override fun onRefresh() {
-        super.onRefresh()
-        refreshEthHeight()
-        refreshUsoSupply()
-        refreshUsoFrozen()
-        refreshLastTransfers()
     }
 
     private fun refreshEthHeight() {

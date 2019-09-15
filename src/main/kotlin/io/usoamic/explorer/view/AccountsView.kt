@@ -44,6 +44,15 @@ class AccountsView(application: Application) : View(application) {
         setListeners()
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (!isFind) {
+            setVisibility(false)
+            clearTexts(listOf(ethBalanceElement, usoBalanceElement, numberOfTxElement), "Loading...")
+            accountTransfersTable.dataTable(DataTableOption.initEmpty())
+        }
+    }
+
     private fun setListeners() {
         searchBtn.onClick {
             val address = input.content()
@@ -84,14 +93,24 @@ class AccountsView(application: Application) : View(application) {
     }
 
     private fun setAccountData(transfers: List<List<Any>>, ethBalance: BigNumber, usoBalance: BigNumber, numberOfTx: String) {
-        accountDataBlock.show()
-        accountTransfersBlock.show()
+        setVisibility(true)
         accountTransfersTable.dataTable(DataTableOption(data = transfers))
         ethBalanceElement.text(ConvertUtil.convertWeiToEth(ethBalance).toString())
 
         usoBalanceElement.text(Coin.Companion.fromSat(usoBalance).toPlainString())
         numberOfTxElement.text(numberOfTx)
         stopLoading()
+    }
+
+    private fun setVisibility(show: Boolean) {
+        if(show) {
+            accountDataBlock.show()
+            accountTransfersBlock.show()
+        }
+        else {
+            accountDataBlock.hide()
+            accountTransfersBlock.hide()
+        }
     }
 
     private fun getTransactions(address: String, lastId: Long?, loadedLastId: Long, callback: (List<List<Any>>) -> Unit) {
