@@ -1,13 +1,13 @@
 package io.usoamic.explorer
 
-import io.usoamic.explorer.view.TransfersView
-import io.usoamic.web3kt.kt2js.require
 import io.usoamic.explorer.base.Application
 import io.usoamic.explorer.base.View
 import io.usoamic.explorer.enumcls.Page
-import io.usoamic.explorer.view.*
+import io.usoamic.explorer.view.AccountsView
+import io.usoamic.explorer.view.TransfersView
 import io.usoamic.usoamickotlinjs.other.Config
 import io.usoamic.web3kt.abi.AbiDecoder
+import io.usoamic.web3kt.kt2js.require
 import js.externals.jquery.extension.setActive
 import js.externals.jquery.jQuery
 import js.externals.toastr.toastr

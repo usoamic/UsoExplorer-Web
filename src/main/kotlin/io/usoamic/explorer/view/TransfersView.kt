@@ -8,17 +8,17 @@ import io.usoamic.explorer.util.Async
 import io.usoamic.explorer.util.CommonUtils
 import io.usoamic.explorer.util.ValidateUtil
 import io.usoamic.web3kt.abi.AbiDecoder
+import io.usoamic.web3kt.bignumber.BigNumber
 import io.usoamic.web3kt.core.contract.util.Coin
 import js.externals.datatables.net.JQueryDataTable
 import js.externals.datatables.net.extension.dataTable
 import js.externals.datatables.net.model.DataTableOption
+import js.externals.jquery.JQuery
 import js.externals.jquery.extension.onClick
 import js.externals.jquery.jQuery
-import kotlin.math.min
-import io.usoamic.web3kt.bignumber.BigNumber
-import js.externals.jquery.JQuery
 import js.externals.toastr.toastr
 import org.w3c.dom.HTMLElement
+import kotlin.math.min
 
 class TransfersView(application: Application) : View(application) {
     override val navBarItem: JQuery<HTMLElement>? = jQuery("#transfers_item")

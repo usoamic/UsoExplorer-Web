@@ -1,9 +1,9 @@
 package io.usoamic.explorer.util
 
-import io.usoamic.web3kt.util.EthereumUtils
 import io.usoamic.explorer.exception.ValidateUtilException
 import io.usoamic.web3kt.bignumber.BigNumber
 import io.usoamic.web3kt.bignumber.BigNumberValue
+import io.usoamic.web3kt.util.EthereumUtils
 
 class ValidateUtil {
     companion object {
