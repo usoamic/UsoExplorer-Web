@@ -9,6 +9,7 @@ class TxUtils {
             val lcFrom = from.toLowerCase()
             val lcTo = to.toLowerCase()
             return when {
+                (lcTo == "0x0000000000000000000000000000000000000000") -> TransferType.BURN
                 ((lcOwner != lcFrom) && (lcOwner == lcTo)) -> TransferType.DEPOSIT
                 ((lcOwner == lcFrom) && (lcOwner != lcTo)) -> TransferType.WITHDRAWAL
                 ((lcOwner == lcFrom) && (lcOwner == lcTo)) -> TransferType.INTERNAL

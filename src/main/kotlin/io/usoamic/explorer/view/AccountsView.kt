@@ -117,7 +117,7 @@ class AccountsView(application: Application) : View(application) {
                                 TransferType.DEPOSIT -> tx.from
                                 TransferType.WITHDRAWAL -> tx.to
                                 TransferType.INTERNAL -> address
-                                TransferType.UNKNOWN -> "N/A"
+                                TransferType.BURN, TransferType.UNKNOWN -> "N/A"
                             },
                             Coin.fromSat(tx.value).toPlainString(),
                             Timestamp.fromBigNumber(tx.timestamp).toLocaleString()
