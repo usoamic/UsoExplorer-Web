@@ -8,6 +8,7 @@ import io.usoamic.explorer.enumcls.Page
 import io.usoamic.explorer.view.*
 import io.usoamic.usoamickotlinjs.other.Config
 import io.usoamic.web3kt.abi.AbiDecoder
+import js.externals.jquery.extension.setActive
 import js.externals.jquery.jQuery
 import js.externals.toastr.toastr
 import kotlin.browser.window
@@ -37,10 +38,12 @@ class App : Application {
     override fun open(view: View) {
         if (::currentView.isInitialized) {
             currentView.onStop()
+            currentView.navBarItem?.setActive(false)
         }
 
         setTitle(view)
 
+        view.navBarItem?.setActive(true)
         currentView = view
         currentView.onStart()
         currentView.onRefresh()
@@ -87,7 +90,7 @@ class App : Application {
             if(hashArg.size > 1) {
                 findData = hashArg[1]
             }
-            Page.valueOf(hash.replace("#", "").toUpperCase())
+            Page.valueOf(hashArg[0].replace("#", "").toUpperCase())
         } catch (e: IllegalStateException) {
             Page.TRANSFERS
         }
