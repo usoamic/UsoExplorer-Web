@@ -3,6 +3,7 @@ package io.usoamic.explorer.view
 import io.usoamic.explorer.base.Application
 import io.usoamic.explorer.base.View
 import io.usoamic.explorer.enumcls.Page
+import io.usoamic.explorer.enumcls.TransactionType
 import io.usoamic.explorer.other.Timestamp
 import io.usoamic.explorer.util.Async
 import io.usoamic.explorer.util.CommonUtils
@@ -18,7 +19,7 @@ import js.externals.jquery.extension.onClick
 import js.externals.jquery.jQuery
 import js.externals.toastr.toastr
 import org.w3c.dom.HTMLElement
-import kotlin.math.min
+import kotlin.math.max
 
 class TransfersView(application: Application) : View(application) {
     override val navBarItem: JQuery<HTMLElement>? = jQuery("#transfers_item")
@@ -181,12 +182,12 @@ class TransfersView(application: Application) : View(application) {
         methods.getNumberOfTransactions()
             .call(callOption)
             .then {
-                val lastId = min(10, it.toLong())
+                val lastId = it.toLong() - 1
                 if (numberOfLastTransfers == lastId) {
                     return@then
                 }
                 if (lastId > 0) {
-                    iterateTransactions(mutableListOf(), lastId, 0, lastId, callback)
+                    iterateTransactions(mutableListOf(), 1, lastId, max(lastId - 10, 0), callback)
                 } else {
                     callback(mutableListOf())
                 }
@@ -196,25 +197,27 @@ class TransfersView(application: Application) : View(application) {
 
     private fun iterateTransactions(
         list: MutableList<List<Any>>,
-        id: Long,
+        index: Long,
         txId: Long,
         lastId: Long,
         callback: (MutableList<List<Any>>) -> Unit
     ) {
         methods.getTransaction(txId.toString()).call(callOption)
             .then { tx ->
+                val type = if(tx.to == "0x0000000000000000000000000000000000000000") TransactionType.BURN else TransactionType.TRANSFER
                 list.add(
                     listOf(
-                        "$id",
+                        "$index",
+                        type.toPlainString(),
                         CommonUtils.reduceString(tx.from, 15),
-                        CommonUtils.reduceString(tx.to, 15),
+                        if (type.isTransfer()) CommonUtils.reduceString(tx.to, 15) else "N/A",
                         Coin.fromSat(tx.value).toPlainString(),
                         Timestamp.fromBigNumber(tx.timestamp).toLocaleString()
                     )
                 )
-                val nextId = (txId + 1)
-                if (nextId < lastId) {
-                    iterateTransactions(list, (id - 1), nextId, lastId, callback)
+                val nextId = (txId - 1)
+                if (nextId >= lastId) {
+                    iterateTransactions(list, (index + 1), nextId, lastId, callback)
                 } else {
                     callback(list)
                 }
