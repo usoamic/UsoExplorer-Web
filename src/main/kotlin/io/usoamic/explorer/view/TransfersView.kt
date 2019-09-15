@@ -1,7 +1,7 @@
 package io.usoamic.explorer.view
 
 import io.usoamic.explorer.base.Application
-import io.usoamic.explorer.base.ExplorerView
+import io.usoamic.explorer.base.View
 import io.usoamic.explorer.enumcls.Page
 import io.usoamic.explorer.other.Timestamp
 import io.usoamic.explorer.util.Async
@@ -13,14 +13,15 @@ import js.externals.datatables.net.JQueryDataTable
 import js.externals.datatables.net.extension.dataTable
 import js.externals.datatables.net.model.DataTableOption
 import js.externals.jquery.extension.onClick
-import js.externals.jquery.extension.stopLoading
 import js.externals.jquery.jQuery
 import kotlin.math.min
 import io.usoamic.web3kt.bignumber.BigNumber
-import js.externals.jquery.extension.startLoading
+import js.externals.jquery.JQuery
 import js.externals.toastr.toastr
+import org.w3c.dom.HTMLElement
 
-class TransfersView(application: Application) : ExplorerView(application) {
+class TransfersView(application: Application) : View(application) {
+    override val navBarItem: JQuery<HTMLElement>? = jQuery("#transfers_item")
     override val view = jQuery("#transfers_view")
     override val searchBtn = jQuery("#transfer_search_button")
     override val input = jQuery("#tx_id_input")
@@ -42,14 +43,6 @@ class TransfersView(application: Application) : ExplorerView(application) {
     init {
         setListeners()
         prepareLastTransfers()
-    }
-
-    override fun startLoading() {
-        searchBtn.startLoading()
-    }
-
-    override fun stopLoading() {
-        searchBtn.stopLoading()
     }
 
     private fun setListeners() {
@@ -180,8 +173,7 @@ class TransfersView(application: Application) : ExplorerView(application) {
     private fun refreshLastTransfers() {
         getTransactions {
             numberOfLastTransfers = it.size.toLong()
-            val callback =
-                lastTransfersTable.dataTable(DataTableOption(data = it))
+            lastTransfersTable.dataTable(DataTableOption(data = it))
         }
     }
 
