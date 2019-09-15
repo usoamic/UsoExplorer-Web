@@ -52,9 +52,9 @@ abstract class View(protected val application: Application) {
         }
     }
 
-    protected fun clearTexts(list: List<JQuery<HTMLElement>>) {
+    protected fun clearTexts(list: List<JQuery<HTMLElement>>, defaultText: String = "") {
         list.forEach {
-            it.clearText()
+            it.text(defaultText)
         }
     }
 
