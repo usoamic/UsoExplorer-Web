@@ -4,6 +4,7 @@ enum class TransferType {
     DEPOSIT,
     WITHDRAWAL,
     INTERNAL,
+    BURN,
     UNKNOWN;
 
     fun toPlainString(): String {
