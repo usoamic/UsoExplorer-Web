@@ -1,7 +1,10 @@
 package io.usoamic.explorer.base
 
-import io.usoamic.usoamickotlinjs.core.Usoamic
-import io.usoamic.usoamickotlinjs.other.Config
+import io.usoamic.explorer.AppConfig
+import io.usoamic.usoamicktjs.core.Usoamic
+import io.usoamic.usoamicktjs.other.Config
+import io.usoamic.usoamicktjs.other.Contract
+import io.usoamic.usoamicktjs.other.Node
 import io.usoamic.web3kt.core.Web3
 import io.usoamic.web3kt.core.contract.model.CallOption
 import io.usoamic.web3kt.core.extension.newContract
@@ -16,8 +19,8 @@ abstract class View(protected val application: Application) {
     abstract val input: JQuery<HTMLElement>
     abstract val searchBtn: JQuery<HTMLElement>
 
-    protected val web3 = Web3(Config.NODE)
-    private val contract = web3.newContract<Usoamic>(Config.CONTRACT_ABI, Config.CONTRACT_ADDRESS)
+    protected val web3 = Web3(Node.by(AppConfig.NETWORK, AppConfig.NODE_PROVIDER))
+    private val contract = web3.newContract<Usoamic>(AppConfig.ABI, Contract.forNetwork(AppConfig.NETWORK))
     protected val methods = contract.methods
     protected val callOption = CallOption("0x8b27fa2987630a1acd8d868ba84b2928de737bc2")
 

@@ -9,8 +9,8 @@ import io.usoamic.explorer.util.Async
 import io.usoamic.explorer.util.ConvertUtil
 import io.usoamic.explorer.util.TxUtils
 import io.usoamic.explorer.util.ValidateUtil
-import io.usoamic.usoamickotlinjs.core.extension.getTransactionsByAddress
-import io.usoamic.usoamickotlinjs.model.Transfer
+import io.usoamic.usoamicktjs.core.extension.getTransactionsByAddress
+import io.usoamic.usoamicktjs.model.Transfer
 import io.usoamic.web3kt.bignumber.BigNumber
 import io.usoamic.web3kt.core.contract.util.Coin
 import io.usoamic.web3kt.tx.block.DefaultBlockParameterName

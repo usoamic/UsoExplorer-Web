@@ -5,7 +5,6 @@ import io.usoamic.explorer.base.View
 import io.usoamic.explorer.enumcls.Page
 import io.usoamic.explorer.view.AccountsView
 import io.usoamic.explorer.view.TransfersView
-import io.usoamic.usoamickotlinjs.other.Config
 import io.usoamic.web3kt.abi.AbiDecoder
 import io.usoamic.web3kt.kt2js.require
 import js.externals.jquery.extension.setActive
@@ -18,7 +17,7 @@ class App : Application {
     private val loader = jQuery(".loader")
 
     init {
-        AbiDecoder.addABI(JSON.parse(Config.CONTRACT_ABI))
+        AbiDecoder.addABI(JSON.parse(AppConfig.ABI))
         startLoading()
         loadDependency()
         setListeners()
