@@ -17,7 +17,7 @@ apply plugin: 'kotlin-dce-js'
 apply plugin: 'org.jetbrains.kotlin.frontend'
 
 group 'io.usoamic'
-version '1.0.0'
+version '1.0.1'
 
 repositories {
     mavenCentral()
@@ -36,20 +36,24 @@ dependencies {
 
 kotlinFrontend {
     downloadNodeJsVersion = "latest"
+    def isProduction = true
 
     npm {
-        dependency "toastr", "^2.1.4"
-        dependency "jquery", "^3.2.0-0"
-        dependency "datatables.net-bs4", "^1.10.19"
+        dependency("bignumber.js", "^9.0.0")
+        dependency("ethereumjs-wallet", "^0.6.3")
+        dependency("abi-decoder", "^2.2.2")
+        dependency("toastr", "^2.1.4")
+        dependency("jquery", "^3.2.0-0")
+        dependency("datatables.net-bs4", "^1.10.19")
     }
 
     webpackBundle {
-        bundleName = "main"
+        bundleName = isProduction ? "main.min" : "main"
         publicPath = file('src/main/html')
-        mode = 'development'
+        mode = isProduction ? 'production' : 'development'
     }
 
-    define "PRODUCTION", false
+    define "PRODUCTION", isProduction
     define "X", false
 }
 
