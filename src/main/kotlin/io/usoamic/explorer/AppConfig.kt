@@ -9,6 +9,6 @@ object AppConfig {
     const val NUMBER_OF_ADDRESS_TRANSACTIONS = 10L
     const val NUMBER_OF_TRANSACTIONS = 10L
 
-    val NETWORK = NetworkType.TESTNET
+    val NETWORK = NetworkType.MAINNET
     val NODE_PROVIDER = NodeProvider.INFURA
 }
