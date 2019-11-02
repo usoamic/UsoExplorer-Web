@@ -1,5 +1,6 @@
 package io.usoamic.explorer.view
 
+import io.usoamic.explorer.AppConfig
 import io.usoamic.explorer.base.Application
 import io.usoamic.explorer.base.View
 import io.usoamic.explorer.enumcls.Page
@@ -190,7 +191,7 @@ class TransfersView(application: Application) : View(application) {
                     return@then
                 }
                 if (lastId > 0) {
-                    iterateTransactions(mutableListOf(), 1, lastId, max(lastId - 10, 0), callback)
+                    iterateTransactions(mutableListOf(), 1, lastId, max(lastId - AppConfig.NUMBER_OF_TRANSACTIONS, 0), callback)
                 } else {
                     callback(mutableListOf())
                 }
@@ -212,8 +213,8 @@ class TransfersView(application: Application) : View(application) {
                     listOf(
                         "$index",
                         type.toPlainString(),
-                        CommonUtils.reduceString(tx.from, 15),
-                        if (type.isTransfer()) CommonUtils.reduceString(tx.to, 15) else "N/A",
+                        getAddressItem(tx.from),
+                        if (type.isTransfer()) getAddressItem(tx.to) else "N/A",
                         Coin.fromSat(tx.value).toPlainString(),
                         Timestamp.fromBigNumber(tx.timestamp).toLocaleString()
                     )
@@ -226,6 +227,10 @@ class TransfersView(application: Application) : View(application) {
                 }
             }
             .catch(this::onException)
+    }
+
+    private fun getAddressItem(address: String): String {
+        return "<a href='index.html#account_$address'>${CommonUtils.reduceString(address, 15)}</a>"
     }
 
     companion object {
