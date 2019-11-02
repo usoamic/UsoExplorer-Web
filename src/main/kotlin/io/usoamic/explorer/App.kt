@@ -106,6 +106,9 @@ class App : Application {
 
     override fun loadDependency() {
         require("datatables.net-bs4")
+        require("bootstrap")
+        require("jquery")
+        require("popper.js")
     }
 }
 

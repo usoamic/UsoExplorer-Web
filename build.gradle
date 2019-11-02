@@ -43,8 +43,10 @@ kotlinFrontend {
         dependency("ethereumjs-wallet", "^0.6.3")
         dependency("abi-decoder", "^2.2.2")
         dependency("toastr", "^2.1.4")
-        dependency("jquery", "^3.2.0-0")
+        dependency("jquery", "^3.3.1")
         dependency("datatables.net-bs4", "^1.10.19")
+        dependency("bootstrap", "^4.1.0")
+        dependency("popper.js", "^1.16.0")
     }
 
     webpackBundle {
