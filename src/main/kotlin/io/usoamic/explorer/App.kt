@@ -68,7 +68,7 @@ class App : Application {
             is AccountsView -> "Accounts"
             else -> "Unknown"
         }
-        window.document.title = "UsoExplorer" + (if(title.isNotEmpty()) " - $title" else "")
+        window.document.title = "Usoamic Explorer" + (if(title.isNotEmpty()) " - $title" else "")
     }
 
     private fun setListeners() {
