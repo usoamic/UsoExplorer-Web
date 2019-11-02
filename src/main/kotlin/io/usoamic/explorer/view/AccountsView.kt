@@ -1,5 +1,6 @@
 package io.usoamic.explorer.view
 
+import io.usoamic.explorer.AppConfig
 import io.usoamic.explorer.base.Application
 import io.usoamic.explorer.base.View
 import io.usoamic.explorer.enumcls.Page
@@ -80,7 +81,7 @@ class AccountsView(application: Application) : View(application) {
                     .then { numberOfTx ->
                         web3.eth.getBalance(address, DefaultBlockParameterName.LATEST)
                             .then { ethBalance ->
-                                getTransactions(address, 500, numberOfTransfers) { transfers ->
+                                getTransactions(address, AppConfig.NUMBER_OF_ADDRESS_TRANSACTIONS, numberOfTransfers) { transfers ->
                                     numberOfTransfers = transfers.size.toLong()
                                     setAccountData(transfers, ethBalance, usoBalance, numberOfTx)
                                 }
