@@ -39,6 +39,7 @@ kotlinFrontend {
     def isProduction = true
 
     npm {
+        dependency("web3", "^1.2.2")
         dependency("bignumber.js", "^9.0.0")
         dependency("ethereumjs-wallet", "^0.6.3")
         dependency("abi-decoder", "^2.2.2")
