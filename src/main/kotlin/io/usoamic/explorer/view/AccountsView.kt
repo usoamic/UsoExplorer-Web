@@ -116,7 +116,7 @@ class AccountsView(application: Application) : View(application) {
 
     private fun getTransactions(address: String, lastId: Long?, loadedLastId: Long, callback: (List<List<Any>>) -> Unit) {
         lastId?.let { lId ->
-            methods.getTransactionsByAddress(address, lId, loadedLastId) { list: MutableList<Transfer>, throwable: Throwable?, hasUpdate: Boolean ->
+            methods.getTransactionsByAddress(address, lId, loadedLastId) { list: MutableList<Transfer>, _, throwable: Throwable?, hasUpdate: Boolean ->
                 if (!hasUpdate) {
                     return@getTransactionsByAddress
                 }
@@ -127,11 +127,11 @@ class AccountsView(application: Application) : View(application) {
                 val txList = mutableListOf<List<Any>>()
                 var id = list.size
 
-                list.forEach { tx ->
+                list.forEachIndexed { index, tx ->
                     val txType = TxUtils.getTxType(address, tx.from, tx.to)
                     txList.add(
                         listOf(
-                            id,
+                            index,
                             txType.toPlainString(),
                             when (txType) {
                                 TransferType.DEPOSIT -> tx.from
